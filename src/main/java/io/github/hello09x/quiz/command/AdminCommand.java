@@ -22,7 +22,7 @@ public class AdminCommand extends ParentCommand {
     @Override
     public @NotNull Component getHelp() {
         return Component.textOfChildren(
-                Component.text("你问我答管理权相关命令\n", NamedTextColor.YELLOW),
+                Component.text("有奖问答管理权相关命令\n", NamedTextColor.YELLOW),
                 Component.text("award", NamedTextColor.DARK_GREEN), Component.text(" - ", NamedTextColor.GRAY), Component.text("奖励相关命令\n"),
                 Component.text("question", NamedTextColor.DARK_GREEN), Component.text(" - ", NamedTextColor.GRAY), Component.text("问题相关命令\n"),
                 Component.text("answer", NamedTextColor.DARK_GREEN), Component.text(" - ", NamedTextColor.GRAY), Component.text("答案相关命令\n"),

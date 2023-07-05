@@ -71,7 +71,10 @@ public class QuestionImportCommand extends ExecutableCommand {
                 Component.text("从插件目录下导入题库\n", NamedTextColor.YELLOW),
                 Component.text("用法: ", NamedTextColor.GOLD), Component.text("/quizadmin question import <CSV 文件名>\n"),
                 Component.text("例子: ", NamedTextColor.GOLD), Component.text("/quizadmin question import question.csv\n"),
-                Component.text("注意: ", NamedTextColor.GOLD), Component.text("CSV 文件必须位于插件的数据目录"));
+                Component.text("注意: \n", NamedTextColor.GOLD),
+                Component.text("    1. CSV 文件必须位于插件的数据目录\n"),
+                Component.text("    2. 模版文件位于插件目录下的 import-template.csv, 但注意不要直接修改它")
+        );
     }
 
     @Override
@@ -259,7 +262,7 @@ public class QuestionImportCommand extends ExecutableCommand {
             }
         });
 
-        sender.sendMessage(Component.text("开始导入...", NamedTextColor.GREEN));
+        sender.sendMessage(Component.text("开始导入题库, 不用等我, 好了会叫你...", NamedTextColor.GREEN));
         return true;
     }
 

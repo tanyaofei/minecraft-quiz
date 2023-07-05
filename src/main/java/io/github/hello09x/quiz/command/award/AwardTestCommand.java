@@ -32,7 +32,7 @@ public class AwardTestCommand extends ExecutableCommand {
     public @NotNull Component getHelp() {
         return Component.textOfChildren(
                 Component.text("测试发放奖励\n", NamedTextColor.YELLOW),
-                Component.text("用法: ", NamedTextColor.GOLD), Component.text("/quizadmin award test [ID|玩家]\n"),
+                Component.text("用法: ", NamedTextColor.GOLD), Component.text("/quizadmin award test <ID|玩家>\n"),
                 Component.text("例子:\n", NamedTextColor.GOLD),
                 Component.text("    /quizadmin award test 1", NamedTextColor.DARK_GREEN), Component.text(" - ", NamedTextColor.GRAY), Component.text("给自己发放 ID 为 1 的奖励\n"),
                 Component.text("    /quizadmin award test hello09x", NamedTextColor.DARK_GREEN), Component.text(" - ", NamedTextColor.GRAY), Component.text("给玩家 hello09x 随机发放一个奖励")
@@ -106,11 +106,12 @@ public class AwardTestCommand extends ExecutableCommand {
         if (args.length != 1) {
             return Collections.emptyList();
         }
-        return sender.getServer()
+        return sender
+                .getServer()
                 .getOnlinePlayers()
                 .stream()
                 .map(Player::getName)
-                .filter(name -> name.equalsIgnoreCase(args[0]))
+                .filter(name -> name.isBlank() || name.equalsIgnoreCase(args[0]))
                 .collect(Collectors.toList());
     }
 }
