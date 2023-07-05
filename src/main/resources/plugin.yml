@@ -1,0 +1,20 @@
+name: quiz
+version: '${project.version}'
+main: io.github.hello09x.quiz.Quiz
+website: https://github.com/tanyaofei/minecraft-quiz
+author: hello09x
+api-version: '1.20'
+
+commands:
+  quizadmin:
+    description: 有奖问答管理相关
+    usage: §/quizadmin ? for more info
+    aliases:
+      - qzadmin
+      - qzadm
+
+permissions:
+  quizadmin:
+    '*':
+      description: 有奖问答管理员命令权限
+      default: op
