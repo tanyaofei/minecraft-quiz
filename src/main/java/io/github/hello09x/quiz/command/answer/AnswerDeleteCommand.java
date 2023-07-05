@@ -23,7 +23,7 @@ public class AnswerDeleteCommand extends ExecutableCommand {
                 Component.text("用法: ", NamedTextColor.GOLD), Component.text("/quizadmin answer delete <ID> [答案序号]\n"),
                 Component.text("例子: \n", NamedTextColor.GOLD),
                 Component.text("    /quizadmin answer delete 1", NamedTextColor.DARK_GREEN), Component.text(" - ", NamedTextColor.GRAY), Component.text("删除所有答案\n"),
-                Component.text("    /quizadmin question delete 1 1", NamedTextColor.DARK_GREEN), Component.text(" - ", NamedTextColor.GRAY), Component.text("删除第 1 个答案\n")
+                Component.text("    /quizadmin question delete 1 1", NamedTextColor.DARK_GREEN), Component.text(" - ", NamedTextColor.GRAY), Component.text("删除第 1 个答案")
         );
     }
 

@@ -30,6 +30,7 @@ public class AwardListCommand extends ExecutableCommand {
                 Component.text("查看所有奖励\n", NamedTextColor.YELLOW),
                 Component.text("用法: ", NamedTextColor.GOLD), Component.text("/quizadmin award list [页码] [条数]\n"),
                 Component.text("例子: \n", NamedTextColor.GOLD),
+                Component.text("    /quizadmin award list", NamedTextColor.DARK_GREEN), Component.text(" - ", NamedTextColor.GRAY), Component.text("查看第 1 页\n"),
                 Component.text("    /quizadmin award list 2", NamedTextColor.DARK_GREEN), Component.text(" - ", NamedTextColor.GRAY), Component.text("查看第 2 页\n"),
                 Component.text("    /quizadmin award list 2 10", NamedTextColor.DARK_GREEN), Component.text(" - ", NamedTextColor.GRAY), Component.text("查看第 2 页, 每页 10 条\n")
         );

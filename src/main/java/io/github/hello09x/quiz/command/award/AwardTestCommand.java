@@ -15,6 +15,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 public class AwardTestCommand extends ExecutableCommand {
@@ -32,8 +33,9 @@ public class AwardTestCommand extends ExecutableCommand {
     public @NotNull Component getHelp() {
         return Component.textOfChildren(
                 Component.text("测试发放奖励\n", NamedTextColor.YELLOW),
-                Component.text("用法: ", NamedTextColor.GOLD), Component.text("/quizadmin award test <ID|玩家>\n"),
+                Component.text("用法: ", NamedTextColor.GOLD), Component.text("/quizadmin award test [ID|玩家]\n"),
                 Component.text("例子:\n", NamedTextColor.GOLD),
+                Component.text("    /quizadmin award test", NamedTextColor.DARK_GREEN), Component.text(" - ", NamedTextColor.GRAY), Component.text("给自己随机发放方法一个奖励\n"),
                 Component.text("    /quizadmin award test 1", NamedTextColor.DARK_GREEN), Component.text(" - ", NamedTextColor.GRAY), Component.text("给自己发放 ID 为 1 的奖励\n"),
                 Component.text("    /quizadmin award test hello09x", NamedTextColor.DARK_GREEN), Component.text(" - ", NamedTextColor.GRAY), Component.text("给玩家 hello09x 随机发放一个奖励")
         );
@@ -47,28 +49,35 @@ public class AwardTestCommand extends ExecutableCommand {
             @NotNull String label,
             @NotNull String[] args
     ) {
-        if (args.length != 1) {
-            return false;
-        }
-
         long id;
         Player player;
-        try {
-            id = Integer.parseInt(args[0]);
+        if (args.length == 0) {
+            id = 0;
             if (!(sender instanceof Player p)) {
                 sender.sendMessage(Component.text("你不是玩家, 无法给自己发放奖励", NamedTextColor.RED));
                 return true;
-            } else {
+            }
+            player = p;
+        } else if (args.length == 1) {
+            try {
+                id = Integer.parseInt(args[0]);
+                if (!(sender instanceof Player p)) {
+                    sender.sendMessage(Component.text("你不是玩家, 无法给自己发放奖励", NamedTextColor.RED));
+                    return true;
+                }
                 player = p;
+            } catch (NumberFormatException ignored) {
+                id = 0;
+                player = sender.getServer().getPlayer(args[0]);
+                if (player == null) {
+                    sender.sendMessage(Component.text(String.format("玩家 '%s' 不存在或者不在线", args[0]), NamedTextColor.RED));
+                    return true;
+                }
             }
-        } catch (NumberFormatException ignored) {
-            id = 0;
-            player = sender.getServer().getPlayer(args[0]);
-            if (player == null) {
-                sender.sendMessage(Component.text(String.format("玩家 '%s' 不存在或者不在线", args[0]), NamedTextColor.RED));
-                return true;
-            }
+        } else {
+            return false;
         }
+
 
         var award = id == 0
                 ? awardRepository.selectRandomly()
@@ -111,7 +120,7 @@ public class AwardTestCommand extends ExecutableCommand {
                 .getOnlinePlayers()
                 .stream()
                 .map(Player::getName)
-                .filter(name -> name.isBlank() || name.equalsIgnoreCase(args[0]))
+                .filter(name -> name.isBlank() || name.toLowerCase(Locale.ROOT).startsWith(args[0].toLowerCase(Locale.ROOT)))
                 .collect(Collectors.toList());
     }
 }

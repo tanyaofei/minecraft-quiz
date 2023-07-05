@@ -18,7 +18,7 @@ public class AnswerCommand extends ParentCommand {
     @Override
     public @NotNull Component getHelp() {
         return Component.textOfChildren(
-                Component.text("答案命令", NamedTextColor.YELLOW),
+                Component.text("答案相关命令", NamedTextColor.YELLOW),
                 Component.text("add", NamedTextColor.DARK_GREEN), Component.text(" - ", NamedTextColor.GRAY), Component.text("添加答案\n"),
                 Component.text("delete", NamedTextColor.DARK_GREEN), Component.text(" - ", NamedTextColor.GRAY), Component.text("删除答案")
         );

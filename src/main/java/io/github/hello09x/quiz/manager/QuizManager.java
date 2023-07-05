@@ -10,6 +10,8 @@ import io.github.hello09x.quiz.utils.Progress;
 import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.Style;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.entity.Player;
@@ -66,7 +68,7 @@ public class QuizManager {
         }
     }
 
-    public void ask() {
+    public synchronized void ask() {
         if (getCurrent() != null) {
             log.warning("发起新的一轮提问时发现上一轮提问还未结束, 已强制结束...");
             current.getProgress().remove();
@@ -109,8 +111,8 @@ public class QuizManager {
 
         server.broadcast(
                 Component.textOfChildren(
-                        Component.text("[quiz] 问题是: \n", NamedTextColor.YELLOW),
-                        Component.text(question.title(), NamedTextColor.GOLD)
+                        Component.text("[quiz] 问题是: ", NamedTextColor.YELLOW),
+                        Component.text(question.title(), NamedTextColor.DARK_GREEN)
                 )
         );
 
@@ -126,7 +128,11 @@ public class QuizManager {
         if (asking != null) {
             var now = LocalDateTime.now();
             if (now.isAfter(asking.getExpiresAt())) {
-                this.current = null;
+                synchronized (this) {
+                    if (this.current == asking) {
+                        this.current = null;
+                    }
+                }
                 asking = null;
             }
         }
@@ -188,7 +194,7 @@ public class QuizManager {
                             log.warning(Throwables.getStackTraceAsString(e));
                         }
 
-                        player.sendMessage(Component.text("[quiz] 奖励已偷偷给你了, 不要告诉别人哦～"));
+                        player.sendMessage(Component.text("[quiz] 奖励已偷偷给你了, 不要告诉别人哦～").style(Style.style(NamedTextColor.GRAY, TextDecoration.ITALIC)));
                     }
                 }.runTask(quiz);
             } catch (Exception e) {

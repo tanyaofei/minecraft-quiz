@@ -52,7 +52,7 @@ public class AwardAddCommand extends ExecutableCommand {
                 String.join(" ", args)
         );
         awardRepository.insert(award);
-        sender.sendMessage(Component.text(String.format("成功创建了一项内容为 '%s' 的奖励", award.commands())).color(NamedTextColor.DARK_GREEN));
+        sender.sendMessage(Component.text(String.format("成功创建了一项命令为 '%s' 的奖励", award.commands())).color(NamedTextColor.DARK_GREEN));
         return true;
     }
 

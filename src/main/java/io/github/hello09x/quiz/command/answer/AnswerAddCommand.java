@@ -22,7 +22,7 @@ public class AnswerAddCommand extends ExecutableCommand {
     @Override
     public @NotNull Component getHelp() {
         return Component.textOfChildren(
-                Component.text("添加答案\n", NamedTextColor.YELLOW),
+                Component.text("功能: 添加答案; 你可以通过多次执行来为一道题添加多个答案\n", NamedTextColor.YELLOW),
                 Component.text("用法: ", NamedTextColor.GOLD), Component.text("/quizadmin answer add <题目ID> <答案>\n"),
                 Component.text("例子: ", NamedTextColor.GOLD), Component.text("/quizadmin answer add 1 这是答案\n")
         );

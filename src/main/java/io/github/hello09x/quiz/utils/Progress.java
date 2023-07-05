@@ -2,6 +2,7 @@ package io.github.hello09x.quiz.utils;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BossBar;
 import org.jetbrains.annotations.Nullable;
 
@@ -50,6 +51,16 @@ public class Progress {
                         cancel();
                     }
                 } else {
+                    var rate = remains / total;
+                    if (rate > 0.75) {
+                        bossBar.setColor(BarColor.GREEN);
+                    } else if (rate > 0.5) {
+                        bossBar.setColor(BarColor.BLUE);
+                    } else if (rate > 0.25) {
+                        bossBar.setColor(BarColor.YELLOW);
+                    } else {
+                        bossBar.setColor(BarColor.RED);
+                    }
                     bossBar.setProgress(remains / total);
                 }
             }

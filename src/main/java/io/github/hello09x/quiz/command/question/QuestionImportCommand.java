@@ -73,7 +73,7 @@ public class QuestionImportCommand extends ExecutableCommand {
                 Component.text("例子: ", NamedTextColor.GOLD), Component.text("/quizadmin question import question.csv\n"),
                 Component.text("注意: \n", NamedTextColor.GOLD),
                 Component.text("    1. CSV 文件必须位于插件的数据目录\n"),
-                Component.text("    2. 模版文件位于插件目录下的 import-template.csv, 但注意不要直接修改它")
+                Component.text("    2. 模版文件位于插件目录下的 \"import-template.csv\", 但注意不要直接修改它")
         );
     }
 
