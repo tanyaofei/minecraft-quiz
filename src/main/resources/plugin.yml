@@ -4,6 +4,8 @@ main: io.github.hello09x.quiz.Quiz
 website: https://github.com/tanyaofei/minecraft-quiz
 author: hello09x
 api-version: '1.20'
+softdepend:
+  - PlaceholderAPI
 
 commands:
   quizadmin:

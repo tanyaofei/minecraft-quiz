@@ -5,7 +5,7 @@ import io.github.hello09x.quiz.Quiz;
 import io.github.hello09x.quiz.manager.domain.Asking;
 import io.github.hello09x.quiz.repository.AwardRepository;
 import io.github.hello09x.quiz.repository.QuestionRepository;
-import io.github.hello09x.quiz.repository.StatisticsRepository;
+import io.github.hello09x.quiz.repository.StatisticRepository;
 import io.github.hello09x.quiz.utils.Progress;
 import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.text.Component;
@@ -20,6 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.time.LocalDateTime;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -33,7 +34,7 @@ public class QuizManager {
     private final Quiz quiz = Quiz.getInstance();
     private final QuestionRepository questionRepository = QuestionRepository.instance;
     private final AwardRepository awardRepository = AwardRepository.instance;
-    private final StatisticsRepository statisticsRepository = StatisticsRepository.instance;
+    private final StatisticRepository statisticRepository = StatisticRepository.instance;
     private final ScheduledExecutorService timer;
     private volatile Asking current;
 
@@ -172,7 +173,13 @@ public class QuizManager {
         }
 
         // 统计
-        statisticsRepository.addCorrect(player.getUniqueId().toString(), 1);
+        CompletableFuture.runAsync(() -> {
+            try {
+                statisticRepository.addCorrect(player, 1);
+            } catch (Throwable e) {
+                log.warning(Throwables.getStackTraceAsString(e));
+            }
+        });
 
         // 奖励
         var award = awardRepository.selectRandomly();

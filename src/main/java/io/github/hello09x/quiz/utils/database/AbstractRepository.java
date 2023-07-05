@@ -131,7 +131,7 @@ public abstract class AbstractRepository<T> {
 
     @Nullable
     public T selectRandomly() {
-        var sql = "SELECT * FROM " + tableName + " ORDER BY RANDOM() LIMIT 1";
+        var sql = "SELECT * FROM " + tableName + " ORDER BY random() LIMIT 1";
         try (var stm = getConnection().prepareStatement(sql)) {
             var rs = stm.executeQuery();
             return mapOne(rs);

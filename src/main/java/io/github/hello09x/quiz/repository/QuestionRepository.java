@@ -95,7 +95,7 @@ public class QuestionRepository extends AbstractRepository<Question> {
     }
 
     public int insertOrUpdateByTitle(@NotNull Question question) {
-        var sql = "INSERT OR REPLACE INTO question (id, title, answers) values ((SELECT id FROM question WHERE title = ?), ?, ?)";
+        var sql = "INSERT OR REPLACE INTO question (id, title, answers) VALUES ((SELECT id FROM question WHERE title = ?), ?, ?)";
         try (var stm = getConnection().prepareStatement(sql)) {
             stm.setObject(1, question.title());
             stm.setObject(2, question.title());
