@@ -8,8 +8,6 @@ import io.github.hello09x.quiz.properties.QuizProperties;
 import io.github.hello09x.quiz.support.StatisticPlaceholder;
 import io.github.hello09x.quiz.utils.database.AbstractRepository;
 import lombok.Getter;
-import me.clip.placeholderapi.PlaceholderAPI;
-import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.logging.Logger;

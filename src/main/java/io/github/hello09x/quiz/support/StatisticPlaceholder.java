@@ -1,16 +1,13 @@
 package io.github.hello09x.quiz.support;
 
-import io.github.hello09x.quiz.Quiz;
 import io.github.hello09x.quiz.repository.StatisticRepository;
 import io.github.hello09x.quiz.repository.model.Statistic;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
-import java.util.UUID;
 
 public class StatisticPlaceholder extends PlaceholderExpansion {
 

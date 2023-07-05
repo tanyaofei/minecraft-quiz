@@ -1,6 +1,5 @@
 package io.github.hello09x.quiz.repository;
 
-import io.github.hello09x.quiz.Quiz;
 import io.github.hello09x.quiz.repository.model.Statistic;
 import io.github.hello09x.quiz.utils.database.AbstractRepository;
 import org.bukkit.entity.Player;
@@ -10,9 +9,6 @@ import org.jetbrains.annotations.Nullable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
 
 public class StatisticRepository extends AbstractRepository<Statistic> {
 
