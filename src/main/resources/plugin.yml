@@ -16,7 +16,6 @@ commands:
       - qzadm
 
 permissions:
-  quizadmin:
-    '*':
-      description: 有奖问答管理员命令权限
-      default: op
+  quizadmin.*:
+    description: 有奖问答管理员命令权限
+    default: op

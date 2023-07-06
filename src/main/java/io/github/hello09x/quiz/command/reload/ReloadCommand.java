@@ -1,4 +1,4 @@
-package io.github.hello09x.quiz.command;
+package io.github.hello09x.quiz.command.reload;
 
 import io.github.hello09x.quiz.Quiz;
 import io.github.tanyaofei.plugin.toolkit.command.ExecutableCommand;

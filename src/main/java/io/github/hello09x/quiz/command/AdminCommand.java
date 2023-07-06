@@ -3,6 +3,7 @@ package io.github.hello09x.quiz.command;
 import io.github.hello09x.quiz.command.answer.AnswerCommand;
 import io.github.hello09x.quiz.command.award.AwardCommand;
 import io.github.hello09x.quiz.command.question.QuestionCommand;
+import io.github.hello09x.quiz.command.reload.ReloadCommand;
 import io.github.tanyaofei.plugin.toolkit.command.ParentCommand;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -10,7 +11,11 @@ import org.jetbrains.annotations.NotNull;
 
 public class AdminCommand extends ParentCommand {
 
-    public static final AdminCommand instance = new AdminCommand();
+    public static final AdminCommand instance = new AdminCommand("quizadmin.*");
+
+    public AdminCommand(String permission) {
+        super(permission);
+    }
 
     static {
         instance.register("award", AwardCommand.instance);

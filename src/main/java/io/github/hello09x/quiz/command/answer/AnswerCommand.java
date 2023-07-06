@@ -1,6 +1,5 @@
 package io.github.hello09x.quiz.command.answer;
 
-import io.github.hello09x.quiz.command.AdminCommand;
 import io.github.tanyaofei.plugin.toolkit.command.ParentCommand;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -8,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class AnswerCommand extends ParentCommand {
 
-    public final static AdminCommand instance = new AdminCommand();
+    public final static AnswerCommand instance = new AnswerCommand();
 
     static {
         instance.register("add", AnswerAddCommand.instance);
