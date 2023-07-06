@@ -149,7 +149,11 @@ public class QuestionRepository extends AbstractRepository<Question> {
             return null;
         }
 
-        return selectById(this.cachedIds.poll());
+        var question = selectById(this.cachedIds.poll());
+        if (question == null) {
+            this.cachedIds.clear();
+        }
+        return question;
     }
 
     public @NotNull LinkedList<Integer> selectIds() {
