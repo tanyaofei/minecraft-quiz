@@ -18,10 +18,7 @@ public class PlayerChatListener implements Listener {
         }
 
         if (event.message() instanceof TextComponent answer) {
-            var correct = QuizManager.instance.answer(event.getPlayer(), asking, answer.content());
-            if (correct) {
-                event.callEvent();
-            }
+            QuizManager.instance.answer(event.getPlayer(), asking, answer.content());
         }
     }
 
