@@ -6,7 +6,7 @@ import io.github.hello09x.quiz.listener.PlayerJoinListener;
 import io.github.hello09x.quiz.manager.QuizManager;
 import io.github.hello09x.quiz.properties.QuizProperties;
 import io.github.hello09x.quiz.support.StatisticPlaceholder;
-import io.github.hello09x.quiz.utils.database.AbstractRepository;
+import io.github.tanyaofei.plugin.toolkit.database.AbstractRepository;
 import lombok.Getter;
 import org.bukkit.plugin.java.JavaPlugin;
 

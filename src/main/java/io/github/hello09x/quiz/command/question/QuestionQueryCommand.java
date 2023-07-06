@@ -2,7 +2,7 @@ package io.github.hello09x.quiz.command.question;
 
 import io.github.hello09x.quiz.repository.QuestionRepository;
 import io.github.hello09x.quiz.repository.model.Question;
-import io.github.hello09x.quiz.utils.command.ExecutableCommand;
+import io.github.tanyaofei.plugin.toolkit.command.ExecutableCommand;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;

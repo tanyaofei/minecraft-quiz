@@ -2,8 +2,10 @@ package io.github.hello09x.quiz.repository;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import io.github.hello09x.quiz.Quiz;
 import io.github.hello09x.quiz.repository.model.Question;
-import io.github.hello09x.quiz.utils.database.AbstractRepository;
+import io.github.tanyaofei.plugin.toolkit.database.AbstractRepository;
+import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -17,12 +19,16 @@ import java.util.List;
 
 public class QuestionRepository extends AbstractRepository<Question> {
 
-    public final static QuestionRepository instance = new QuestionRepository();
+    public final static QuestionRepository instance = new QuestionRepository(Quiz.getInstance());
 
     private final static Gson gson = new Gson();
 
     private final static TypeToken<List<String>> STRING_LIST_TYPE_TOKEN = new TypeToken<>() {
     };
+
+    public QuestionRepository(Plugin plugin) {
+        super(plugin);
+    }
 
     public Integer insert(Question question) {
         try (var stm = getConnection().prepareStatement("INSERT INTO question (title, answers) values (?, ?)", Statement.RETURN_GENERATED_KEYS)) {
@@ -107,7 +113,7 @@ public class QuestionRepository extends AbstractRepository<Question> {
     }
 
     @Override
-    protected void createTableIfNotExists() throws SQLException {
+    protected void initTables() throws SQLException {
         try (var stm = getConnection().createStatement()) {
             stm.execute("""
                     create table if not exists question

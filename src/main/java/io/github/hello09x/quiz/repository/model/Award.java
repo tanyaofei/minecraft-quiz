@@ -1,7 +1,8 @@
 package io.github.hello09x.quiz.repository.model;
 
-import io.github.hello09x.quiz.utils.database.Id;
-import io.github.hello09x.quiz.utils.database.Table;
+import io.github.tanyaofei.plugin.toolkit.database.Column;
+import io.github.tanyaofei.plugin.toolkit.database.Id;
+import io.github.tanyaofei.plugin.toolkit.database.Table;
 import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.entity.Player;
@@ -21,6 +22,7 @@ public record Award(
 
         // 命令
         // 多个命令使用 ';' 作为分割
+        @Column("commands")
         String commands
 ) {
 

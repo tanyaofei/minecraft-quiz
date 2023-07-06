@@ -3,7 +3,7 @@ package io.github.hello09x.quiz.command;
 import io.github.hello09x.quiz.command.answer.AnswerCommand;
 import io.github.hello09x.quiz.command.award.AwardCommand;
 import io.github.hello09x.quiz.command.question.QuestionCommand;
-import io.github.hello09x.quiz.utils.command.ParentCommand;
+import io.github.tanyaofei.plugin.toolkit.command.ParentCommand;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.jetbrains.annotations.NotNull;

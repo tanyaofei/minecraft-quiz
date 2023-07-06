@@ -1,6 +1,6 @@
 package io.github.hello09x.quiz.command.award;
 
-import io.github.hello09x.quiz.utils.command.ParentCommand;
+import io.github.tanyaofei.plugin.toolkit.command.ParentCommand;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.jetbrains.annotations.NotNull;

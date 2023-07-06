@@ -1,11 +1,12 @@
 package io.github.hello09x.quiz.command.question;
 
 import io.github.hello09x.quiz.repository.QuestionRepository;
-import io.github.hello09x.quiz.utils.TextColor;
-import io.github.hello09x.quiz.utils.command.ExecutableCommand;
+import io.github.tanyaofei.plugin.toolkit.command.ExecutableCommand;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.Style;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
@@ -69,13 +70,12 @@ public class QuestionListCommand extends ExecutableCommand {
         var page = repository.selectPage(current, size);
         sender.sendMessage(page.toComponent(
                 "问题库",
-                question -> Component.text(
-                        TextColor.GREEN
-                                + question.id()
-                                + ". "
-                                + TextColor.WHITE
-                                + question.title())
-                        .clickEvent(ClickEvent.runCommand("/quizadmin question query " + question.id())),
+                question -> Component.textOfChildren(
+                        Component.text("[" + question.id() + "]. ", NamedTextColor.DARK_GREEN),
+                        Component.text(question.title())
+                                .style(Style.style(NamedTextColor.WHITE, TextDecoration.UNDERLINED))
+                                .clickEvent(ClickEvent.runCommand("/quizadmin question query " + question.id()))
+                ),
                 String.format("/quizadmin question list %s %s", current - 1, size), String.format("/quizadmin question list %s %s", current + 1, size)));
         return true;
     }

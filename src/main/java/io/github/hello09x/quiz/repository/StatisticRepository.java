@@ -1,18 +1,23 @@
 package io.github.hello09x.quiz.repository;
 
+import io.github.hello09x.quiz.Quiz;
 import io.github.hello09x.quiz.repository.model.Statistic;
-import io.github.hello09x.quiz.utils.database.AbstractRepository;
+import io.github.tanyaofei.plugin.toolkit.database.AbstractRepository;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
 public class StatisticRepository extends AbstractRepository<Statistic> {
 
-    public final static StatisticRepository instance = new StatisticRepository();
+    public final static StatisticRepository instance = new StatisticRepository(Quiz.getInstance());
+
+    public StatisticRepository(Plugin plugin) {
+        super(plugin);
+    }
 
     public int addCorrect(
             @NotNull Player player,
@@ -76,7 +81,7 @@ public class StatisticRepository extends AbstractRepository<Statistic> {
     }
 
     @Override
-    protected void createTableIfNotExists() throws SQLException {
+    protected void initTables() throws SQLException {
         try (var stm = getConnection().createStatement()) {
             stm.execute("""
                     -- auto-generated definition
@@ -95,18 +100,4 @@ public class StatisticRepository extends AbstractRepository<Statistic> {
         }
     }
 
-    @Nullable
-    @Override
-    protected Statistic mapOne(@NotNull ResultSet rs) {
-        try {
-            if (!rs.next()) {
-                return null;
-            }
-            return new Statistic(
-                    rs.getString("player_name"),
-                    rs.getInt("corrects"));
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
 }

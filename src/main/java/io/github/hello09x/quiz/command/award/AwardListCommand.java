@@ -1,8 +1,7 @@
 package io.github.hello09x.quiz.command.award;
 
 import io.github.hello09x.quiz.repository.AwardRepository;
-import io.github.hello09x.quiz.utils.TextColor;
-import io.github.hello09x.quiz.utils.command.ExecutableCommand;
+import io.github.tanyaofei.plugin.toolkit.command.ExecutableCommand;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.Command;
@@ -68,12 +67,10 @@ public class AwardListCommand extends ExecutableCommand {
         var page = repository.selectPage(current, size);
         sender.sendMessage(page.toComponent(
                 "奖励池",
-                award -> Component.text(
-                        TextColor.GREEN
-                                + award.id()
-                                + ". "
-                                + TextColor.WHITE
-                                + award.commands()),
+                award -> Component.textOfChildren(
+                        Component.text("[" + award.id() + "]. ", NamedTextColor.DARK_GREEN),
+                        Component.text(award.commands(), NamedTextColor.WHITE)
+                ),
                 String.format("/quizadmin award list %s %s", current - 1, size), String.format("/quizadmin award list %s %s", current + 1, size)));
         return true;
     }

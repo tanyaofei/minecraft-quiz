@@ -6,7 +6,8 @@ import io.github.hello09x.quiz.manager.domain.Asking;
 import io.github.hello09x.quiz.repository.AwardRepository;
 import io.github.hello09x.quiz.repository.QuestionRepository;
 import io.github.hello09x.quiz.repository.StatisticRepository;
-import io.github.hello09x.quiz.utils.Progress;
+import io.github.tanyaofei.plugin.toolkit.progress.ProgressType;
+import io.github.tanyaofei.plugin.toolkit.progress.TimeProgress;
 import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -72,7 +73,7 @@ public class QuizManager {
     public synchronized void ask() {
         if (getCurrent() != null) {
             log.warning("发起新的一轮提问时发现上一轮提问还未结束, 已强制结束...");
-            current.getProgress().remove();
+            current.getProgress().cancel();
             current = null;
         }
 
@@ -94,13 +95,27 @@ public class QuizManager {
 
         var createdAt = LocalDateTime.now();
         var expiresAt = createdAt.plus(quiz.getProperties().getExpiresIn());
-        var progress = new Progress(
+        var bossBar = server.createBossBar(question.title(), BarColor.GREEN, BarStyle.SOLID);
+        var progress = new TimeProgress(
                 createdAt,
                 expiresAt,
-                server.createBossBar(question.title(), BarColor.YELLOW, BarStyle.SOLID),
+                bossBar,
+                1000,
+                ProgressType.REWARD,
                 () -> {
                     current = null;
                     server.broadcast(Component.text("[quiz] 看来没人能回答正确，奖品我吞掉啦～", NamedTextColor.YELLOW));
+                },
+                p -> {
+                    if (p > 0.75) {
+                        bossBar.setColor(BarColor.GREEN);
+                    } else if (p > 0.5) {
+                        bossBar.setColor(BarColor.BLUE);
+                    } else if (p > 0.25) {
+                        bossBar.setColor(BarColor.YELLOW);
+                    } else {
+                        bossBar.setColor(BarColor.RED);
+                    }
                 }
         );
         current = new Asking(
@@ -118,7 +133,7 @@ public class QuizManager {
         );
 
         for (var player : server.getOnlinePlayers()) {
-            progress.getBossBar().addPlayer(player);
+            bossBar.addPlayer(player);
         }
 
     }
@@ -151,7 +166,7 @@ public class QuizManager {
         if (!isCorrect(asking, answer)) {
             return false;
         }
-        this.current.getProgress().remove();
+        this.current.getProgress().cancel();
         this.current = null;
 
         var server = player.getServer();

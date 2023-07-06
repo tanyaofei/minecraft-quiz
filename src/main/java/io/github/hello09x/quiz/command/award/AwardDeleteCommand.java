@@ -1,7 +1,7 @@
 package io.github.hello09x.quiz.command.award;
 
 import io.github.hello09x.quiz.repository.AwardRepository;
-import io.github.hello09x.quiz.utils.command.ExecutableCommand;
+import io.github.tanyaofei.plugin.toolkit.command.ExecutableCommand;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.Command;

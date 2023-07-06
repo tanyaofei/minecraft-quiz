@@ -1,7 +1,9 @@
 package io.github.hello09x.quiz.repository.model;
 
-import io.github.hello09x.quiz.utils.database.Id;
-import io.github.hello09x.quiz.utils.database.Table;
+
+import io.github.tanyaofei.plugin.toolkit.database.Column;
+import io.github.tanyaofei.plugin.toolkit.database.Id;
+import io.github.tanyaofei.plugin.toolkit.database.Table;
 
 @Table("statistics")
 public record Statistic(
@@ -11,6 +13,7 @@ public record Statistic(
         String playerName,
 
         // 正确次数
+        @Column("corrects")
         Integer corrects
 ) {
 

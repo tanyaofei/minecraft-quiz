@@ -1,11 +1,10 @@
 package io.github.hello09x.quiz.manager.domain;
 
 import io.github.hello09x.quiz.repository.model.Question;
-import io.github.hello09x.quiz.utils.Progress;
+import io.github.tanyaofei.plugin.toolkit.progress.TimeProgress;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.experimental.Accessors;
-import org.bukkit.boss.BossBar;
 
 import java.time.LocalDateTime;
 
@@ -22,7 +21,7 @@ public class Asking {
     /**
      * 进度条
      */
-    private Progress progress;
+    private TimeProgress progress;
 
     /**
      * 提问时间

@@ -1,15 +1,20 @@
 package io.github.hello09x.quiz.repository;
 
+import io.github.hello09x.quiz.Quiz;
 import io.github.hello09x.quiz.repository.model.Award;
-import io.github.hello09x.quiz.utils.database.AbstractRepository;
+import io.github.tanyaofei.plugin.toolkit.database.AbstractRepository;
+import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class AwardRepository extends AbstractRepository<Award> {
 
-    public final static AwardRepository instance = new AwardRepository();
+    public final static AwardRepository instance = new AwardRepository(Quiz.getInstance());
+
+    public AwardRepository(Plugin plugin) {
+        super(plugin);
+    }
 
     public int insert(@NotNull Award award) {
         try (var stm = getConnection().prepareStatement("INSERT INTO award(commands) values (?)")) {
@@ -20,22 +25,8 @@ public class AwardRepository extends AbstractRepository<Award> {
         }
     }
 
-    protected Award mapOne(@NotNull ResultSet rs) {
-        try {
-            if (!rs.next()) {
-                return null;
-            }
-            return new Award(
-                    rs.getInt("id"),
-                    rs.getString("commands")
-            );
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     @Override
-    protected void createTableIfNotExists() throws SQLException {
+    protected void initTables() throws SQLException {
         try (var stm = getConnection().createStatement()) {
             stm.execute("""
                     create table if not exists award
@@ -46,4 +37,5 @@ public class AwardRepository extends AbstractRepository<Award> {
                     """);
         }
     }
+
 }
