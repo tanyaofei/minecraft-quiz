@@ -69,7 +69,7 @@ public class AwardListCommand extends ExecutableCommand {
                 "奖励池",
                 award -> Component.textOfChildren(
                         Component.text("[" + award.id() + "]. ", NamedTextColor.DARK_GREEN),
-                        Component.text(award.commands(), NamedTextColor.WHITE)
+                        Component.text(award.commands())
                 ),
                 String.format("/quizadmin award list %s %s", current - 1, size), String.format("/quizadmin award list %s %s", current + 1, size)));
         return true;

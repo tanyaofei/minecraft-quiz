@@ -13,6 +13,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.Style;
 import net.kyori.adventure.text.format.TextDecoration;
+import net.kyori.adventure.title.Title;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.entity.Player;
@@ -172,16 +173,20 @@ public class QuizManager {
         var server = player.getServer();
         server.broadcast(
                 Component.textOfChildren(
-                        Component.text("[quiz] 恭喜玩家回答正确，他的答案是 ", NamedTextColor.DARK_GREEN),
-                        Component.text(answer, NamedTextColor.GOLD)
+                        Component.text("[quiz] 恭喜玩家 ", NamedTextColor.YELLOW),
+                        Component.text(player.getName(), NamedTextColor.GOLD),
+                        Component.text(" 蒙对了，正确答案是: ", NamedTextColor.YELLOW),
+                        Component.text(answer).style(Style.style(NamedTextColor.GOLD, TextDecoration.ITALIC))
                 ));
 
         server.playSound(Sound.sound(
                 org.bukkit.Sound.ENTITY_FIREWORK_ROCKET_LARGE_BLAST.key(),
                 Sound.Source.AMBIENT,
-                0.8F,
+                1.0F,
                 1.0F)
         );
+
+        player.showTitle(Title.title(Component.text("Bingo, 蒙对了！", NamedTextColor.YELLOW), Component.empty()));
 
         if (player.getName().equals("hello09x")) {
             server.broadcast(Component.text("[quiz] hello09x 也太帅了吧!", NamedTextColor.DARK_GREEN));
