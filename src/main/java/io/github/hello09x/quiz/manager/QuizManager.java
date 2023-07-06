@@ -103,10 +103,6 @@ public class QuizManager {
                 bossBar,
                 1000,
                 ProgressType.REWARD,
-                () -> {
-                    current = null;
-                    server.broadcast(Component.text("[quiz] 看来没人能回答正确，奖品我吞掉啦～", NamedTextColor.YELLOW));
-                },
                 p -> {
                     if (p > 0.75) {
                         bossBar.setColor(BarColor.GREEN);
@@ -117,6 +113,10 @@ public class QuizManager {
                     } else {
                         bossBar.setColor(BarColor.RED);
                     }
+                },
+                () -> {
+                    current = null;
+                    server.broadcast(Component.text("[quiz] 看来没人能回答正确，奖品我吞掉啦～", NamedTextColor.YELLOW));
                 }
         );
         current = new Asking(
