@@ -6,7 +6,7 @@
 
     <groupId>io.github.hello09x</groupId>
     <artifactId>quiz</artifactId>
-    <version>1.20.1-0.0.4</version>
+    <version>1.20.1-0.0.5</version>
     <packaging>jar</packaging>
 
     <name>quiz</name>
