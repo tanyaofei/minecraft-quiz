@@ -79,7 +79,7 @@ public class QuizManager {
 
         var question = questionRepository.selectRandomly();
         if (question == null) {
-            this.quiz.getServer().broadcast(Component.text("[quiz] 实在想不出问什么，本轮有奖问答取消", NamedTextColor.RED));
+            this.quiz.getServer().broadcast(Component.text("[quiz] 实在想不出问什么，本轮有奖问答取消", NamedTextColor.GRAY));
             return;
         }
 
