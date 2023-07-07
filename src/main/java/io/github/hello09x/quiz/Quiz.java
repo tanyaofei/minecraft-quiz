@@ -69,6 +69,6 @@ public final class Quiz extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        AbstractRepository.closeConnections();
+        AbstractRepository.closeConnection(this);
     }
 }
