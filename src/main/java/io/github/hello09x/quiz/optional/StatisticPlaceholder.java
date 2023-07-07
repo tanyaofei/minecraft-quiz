@@ -1,4 +1,4 @@
-package io.github.hello09x.quiz.support;
+package io.github.hello09x.quiz.optional;
 
 import io.github.hello09x.quiz.repository.StatisticRepository;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
