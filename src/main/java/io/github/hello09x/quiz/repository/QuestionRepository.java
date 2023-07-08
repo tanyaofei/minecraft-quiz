@@ -1,5 +1,6 @@
 package io.github.hello09x.quiz.repository;
 
+import com.google.common.base.Throwables;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import io.github.hello09x.quiz.Quiz;
@@ -11,7 +12,7 @@ import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.Serializable;
+import java.io.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -20,21 +21,26 @@ import java.util.logging.Logger;
 
 public class QuestionRepository extends AbstractRepository<Question> {
 
-    public final static QuestionRepository instance = new QuestionRepository(Quiz.getInstance());
+    public final static QuestionRepository instance;
 
-    private final static Gson gson = new Gson();
+    private final static Logger log;
+    private final static Gson gson;
 
-    private final static TypeToken<List<String>> STRING_LIST_TYPE_TOKEN = new TypeToken<>() {
-    };
-
-    private final static Logger log = Quiz.getInstance().getLogger();
-
+    static {
+        log = Quiz.getInstance().getLogger();
+        gson = new Gson();
+        instance = new QuestionRepository(Quiz.getInstance());
+    }
     private final LinkedList<Integer> queue = new LinkedList<>();
-
 
     public QuestionRepository(Plugin plugin) {
         super(plugin);
-        refillQueue();
+
+        if (requeueFromCacheFile()) {
+            log.info("已加载缓存出题表");
+        } else {
+            requeue();
+        }
     }
 
     public Integer insert(@NotNull Question question) {
@@ -278,10 +284,36 @@ public class QuestionRepository extends AbstractRepository<Question> {
             return new Question(
                     rs.getInt("id"),
                     rs.getString("title"),
-                    gson.fromJson(rs.getString("answers"), STRING_LIST_TYPE_TOKEN));
+                    gson.fromJson(rs.getString("answers"), new TypeToken<>() {
+                    }));
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public boolean requeueFromCacheFile() {
+        var file = new File(Quiz.getInstance().getDataFolder(), "queue.json");
+        if (!file.exists()) {
+            return false;
+        }
+
+        LinkedList<Integer> queue;
+        try (var in = new FileReader(file)) {
+            queue = gson.fromJson(in, new TypeToken<>() {
+            });
+        } catch (IOException e) {
+            log.warning("无法读取出题表缓存文件\n" + Throwables.getStackTraceAsString(e));
+            return false;
+        }
+
+        if (queue.isEmpty()) {
+            return false;
+        }
+        synchronized (this.queue) {
+            this.queue.clear();
+            this.queue.addAll(queue);
+        }
+        return true;
     }
 
     private boolean refillQueue() {
@@ -297,12 +329,28 @@ public class QuestionRepository extends AbstractRepository<Question> {
         return false;
     }
 
-    public void regenerateQueue() {
+    public void requeue() {
         synchronized (this.queue) {
             this.queue.clear();
             refillQueue();
         }
     }
 
+    public void cacheQueue() {
+        var folder = Quiz.getInstance().getDataFolder();
+        if (!folder.exists() && !folder.mkdirs()) {
+            log.warning("无法创建插件数据目录");
+            return;
+        }
+
+        var file = new File(folder, "queue.json");
+        try (var out = new FileWriter(file)) {
+            synchronized (this.queue) {
+                out.write(gson.toJson(this.queue));
+            }
+        } catch (IOException e) {
+            log.warning("无法缓存出题表\n" + Throwables.getStackTraceAsString(e));
+        }
+    }
 
 }

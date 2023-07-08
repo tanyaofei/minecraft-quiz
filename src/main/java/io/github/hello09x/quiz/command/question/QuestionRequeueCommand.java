@@ -34,7 +34,7 @@ public class QuestionRequeueCommand extends ExecutableCommand {
             @NotNull String label,
             @NotNull String[] args
     ) {
-        repository.regenerateQueue();
+        repository.requeue();
         sender.sendMessage(text("重新生成出题顺序表成功", NamedTextColor.GREEN));
         return true;
     }

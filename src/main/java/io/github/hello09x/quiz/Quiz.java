@@ -6,6 +6,7 @@ import io.github.hello09x.quiz.listener.PlayerJoinListener;
 import io.github.hello09x.quiz.manager.QuizManager;
 import io.github.hello09x.quiz.optional.StatisticPlaceholder;
 import io.github.hello09x.quiz.properties.QuizProperties;
+import io.github.hello09x.quiz.repository.QuestionRepository;
 import io.github.tanyaofei.plugin.toolkit.database.AbstractRepository;
 import lombok.Getter;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -69,5 +70,11 @@ public final class Quiz extends JavaPlugin {
     @Override
     public void onDisable() {
         AbstractRepository.closeConnection(this);
+
+        {
+            QuestionRepository.instance.cacheQueue();
+            log.info("已缓存出题表");
+        }
+
     }
 }
