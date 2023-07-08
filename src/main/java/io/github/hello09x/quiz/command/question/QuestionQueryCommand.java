@@ -3,7 +3,6 @@ package io.github.hello09x.quiz.command.question;
 import io.github.hello09x.quiz.repository.QuestionRepository;
 import io.github.hello09x.quiz.repository.model.Question;
 import io.github.tanyaofei.plugin.toolkit.command.ExecutableCommand;
-import io.github.tanyaofei.plugin.toolkit.command.help.Helps;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -17,22 +16,22 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Collections;
 import java.util.List;
 
+import static net.kyori.adventure.text.Component.newline;
+import static net.kyori.adventure.text.Component.text;
+import static net.kyori.adventure.text.format.NamedTextColor.*;
+
 public class QuestionQueryCommand extends ExecutableCommand {
 
-    public final static QuestionQueryCommand instance = new QuestionQueryCommand();
-    private final QuestionRepository repository = QuestionRepository.instance;
-
-    private final static Component help = Helps.help(
+    public final static QuestionQueryCommand instance = new QuestionQueryCommand(
             "查看问题",
-            null,
-            List.of(
-                    new Helps.Content("用法", "/quizadmin question query 1")
-            )
+            "/quizadmin question query <ID>",
+            "quizadmin.*"
     );
 
-    @Override
-    public @NotNull Component getHelp() {
-        return help;
+    private final QuestionRepository repository = QuestionRepository.instance;
+
+    public QuestionQueryCommand(@NotNull String description, @NotNull String usage, @Nullable String permission) {
+        super(description, usage, permission);
     }
 
     @Override
@@ -55,36 +54,40 @@ public class QuestionQueryCommand extends ExecutableCommand {
 
         var question = repository.selectById(id);
         if (question == null) {
-            sender.sendMessage(Component.text(String.format("ID 为 %d 的问题不存在", id), NamedTextColor.RED));
+            sender.sendMessage(text(String.format("ID 为 %d 的问题不存在", id), NamedTextColor.RED));
             return true;
         }
 
         sender.sendMessage(Component.textOfChildren(
-                Component.text("____/ 问题 \\____\n", NamedTextColor.YELLOW),
-                Component.text("题目: ", NamedTextColor.GOLD),
-                question.getTitleComponent(), Component.newline(),
-                Component.text("答案: \n", NamedTextColor.GOLD),
-                getAnswersComponent(question)
+                text("____/ 问题 \\____\n", YELLOW),
+                text("ID: ", GOLD), text(question.id()), newline(),
+                text("题目: ", GOLD), question.getTitleComponent(), newline(),
+                text("答案: \n", GOLD), getAnswersComponent(question)
         ));
         return true;
     }
 
     @Override
-    public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+    public @Nullable List<String> onTabComplete(
+            @NotNull CommandSender sender,
+            @NotNull Command command,
+            @NotNull String label,
+            @NotNull String[] args
+    ) {
         return Collections.emptyList();
     }
 
     private Component getTitleComponent(@NotNull Question question) {
-        var full = Component.text(question.title());
+        var full = text(question.title());
         if (question.title().length() > 30) {
-            return Component.text(question.title().substring(0, 30) + "...").style(Style.style(TextDecoration.UNDERLINED)).hoverEvent(HoverEvent.showText(full));
+            return text(question.title().substring(0, 30) + "...").style(Style.style(TextDecoration.UNDERLINED)).hoverEvent(HoverEvent.showText(full));
         }
         return full;
     }
 
     private Component getAnswersComponent(@NotNull Question question) {
         if (question.answers().isEmpty()) {
-            return Component.text("... 没有任何答案 ...", NamedTextColor.GRAY);
+            return text("... 没有任何答案 ...", GRAY);
         }
 
         var c = Component.empty();
@@ -93,8 +96,8 @@ public class QuestionQueryCommand extends ExecutableCommand {
             var i = itr.nextIndex() + 1;
             var answer = itr.next();
             c = c.append(Component.textOfChildren(
-                    Component.text(i + ". ", NamedTextColor.DARK_GREEN),
-                    Component.text(answer + "\n")
+                    text(i + ". ", DARK_GREEN),
+                    text(answer + "\n")
             ));
         }
         return c;

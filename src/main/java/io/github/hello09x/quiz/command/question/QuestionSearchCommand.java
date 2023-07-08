@@ -2,7 +2,6 @@ package io.github.hello09x.quiz.command.question;
 
 import io.github.hello09x.quiz.repository.QuestionRepository;
 import io.github.tanyaofei.plugin.toolkit.command.ExecutableCommand;
-import io.github.tanyaofei.plugin.toolkit.command.help.Helps;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -15,25 +14,16 @@ import java.util.List;
 
 public class QuestionSearchCommand extends ExecutableCommand {
 
-    public final static QuestionSearchCommand instance = new QuestionSearchCommand();
-    private final QuestionRepository repository = QuestionRepository.instance;
-
-    private final static Component help = Helps.help(
+    public final static QuestionSearchCommand instance = new QuestionSearchCommand(
             "搜索问题",
-            null,
-            List.of(
-                    new Helps.Content("用法", "/quizadmin search <关键字>")
-            )
+            "/quizadmin question search <关键字>",
+            "quizadmin.*"
     );
 
-    @Override
-    public boolean hasPermission(CommandSender sender) {
-        return sender.hasPermission("quizadmin.*");
-    }
+    private final QuestionRepository repository = QuestionRepository.instance;
 
-    @Override
-    public @NotNull Component getHelp() {
-        return help;
+    public QuestionSearchCommand(@NotNull String description, @NotNull String usage, @Nullable String permission) {
+        super(description, usage, permission);
     }
 
     @Override

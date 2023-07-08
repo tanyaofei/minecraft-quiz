@@ -37,25 +37,28 @@ public class QuestionImportCommand extends ExecutableCommand {
 
     static {
         log = Quiz.getInstance().getLogger();
-        instance = new QuestionImportCommand();
+        instance = new QuestionImportCommand(
+                "导入题目",
+                "/quizadmin question import <文件名>",
+                "quizadmin.*"
+        );
     }
 
     private final static Component help = Helps.help(
             "导入题目",
             "仅可以导入插件数据目录下的 csv 文件",
-            List.of(
-                    new Helps.Content("用法", "/quizadmin question import <文件名>"),
-                    new Helps.Content("例子", "/quizadmin question import questions.csv"),
-                    new Helps.Content("注意", List.of(
-                            "1. 文件必须为 csv 格式并且存放于插件数据目录下",
-                            "2. 插件目录下有一个名为 \"import-template.csv\" 模版参考, 但注意不要直接修改它"
-                    ))
-            )
+            new Helps.Content("用法", "/quizadmin question import <文件名>"),
+            new Helps.Content("例子", "/quizadmin question import questions.csv"),
+            new Helps.Content("注意", List.of(
+                    "1. 文件必须为 csv 格式并且存放于插件数据目录下",
+                    "2. 插件目录下有一个名为 \"import-template.csv\" 模版参考, 但注意不要直接修改它"
+            ))
     );
 
     private final QuestionRepository repository = QuestionRepository.instance;
 
-    public QuestionImportCommand() {
+    public QuestionImportCommand(@NotNull String description, @NotNull String usage, @Nullable String permission) {
+        super(description, usage, permission);
         var folder = Quiz.getInstance().getDataFolder();
         if (!folder.exists() && !folder.mkdirs()) {
             throw new ExceptionInInitializerError("无法创建插件配置目录");
@@ -75,12 +78,7 @@ public class QuestionImportCommand extends ExecutableCommand {
     }
 
     @Override
-    public boolean hasPermission(CommandSender sender) {
-        return sender.hasPermission("quizadmin.*");
-    }
-
-    @Override
-    public @NotNull Component getHelp() {
+    public @NotNull Component getHelp(int page) {
         return help;
     }
 

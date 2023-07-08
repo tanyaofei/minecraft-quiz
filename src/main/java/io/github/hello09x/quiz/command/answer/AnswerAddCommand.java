@@ -2,8 +2,6 @@ package io.github.hello09x.quiz.command.answer;
 
 import io.github.hello09x.quiz.repository.QuestionRepository;
 import io.github.tanyaofei.plugin.toolkit.command.ExecutableCommand;
-import io.github.tanyaofei.plugin.toolkit.command.help.Helps;
-import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -17,21 +15,17 @@ import static net.kyori.adventure.text.Component.text;
 
 public class AnswerAddCommand extends ExecutableCommand {
 
-    private final QuestionRepository repository = QuestionRepository.instance;
-
-    public final static AnswerAddCommand instance = new AnswerAddCommand();
-
-    public final static Component help = Helps.help(
-            "添加答案",
-            "你可以多次执行来添加多个答案",
-            List.of(
-                    new Helps.Content("用法", "/quizadmin answer add <id> <答案>")
-            )
+    public final static AnswerAddCommand instance = new AnswerAddCommand(
+            "新增答案",
+            "/quizadmin answer add ",
+            "quizadmin.*"
     );
 
-    @Override
-    public @NotNull Component getHelp() {
-        return help;
+    private final QuestionRepository repository = QuestionRepository.instance;
+
+
+    public AnswerAddCommand(@NotNull String description, @NotNull String usage, @Nullable String permission) {
+        super(description, usage, permission);
     }
 
     @Override

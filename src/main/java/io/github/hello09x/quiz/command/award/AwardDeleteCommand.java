@@ -2,7 +2,6 @@ package io.github.hello09x.quiz.command.award;
 
 import io.github.hello09x.quiz.repository.AwardRepository;
 import io.github.tanyaofei.plugin.toolkit.command.ExecutableCommand;
-import io.github.tanyaofei.plugin.toolkit.command.help.Helps;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.Command;
@@ -15,25 +14,15 @@ import java.util.List;
 
 public class AwardDeleteCommand extends ExecutableCommand {
 
-    public final static AwardDeleteCommand instance = new AwardDeleteCommand();
+    public final static AwardDeleteCommand instance = new AwardDeleteCommand(
+            "删除奖励",
+            "/quizadmin award delete <ID>",
+            "quizadmin.*"
+    );
     private final AwardRepository awardRepository = AwardRepository.instance;
 
-    private final static Component help = Helps.help(
-            "删除奖励",
-            null,
-            List.of(
-                    new Helps.Content("用法", "/quizadmin award delete <ID>")
-            )
-    );
-
-    @Override
-    public boolean hasPermission(CommandSender sender) {
-        return sender.hasPermission("quizadmin.*");
-    }
-
-    @Override
-    public @NotNull Component getHelp() {
-        return help;
+    public AwardDeleteCommand(@NotNull String description, @NotNull String usage, @Nullable String permission) {
+        super(description, usage, permission);
     }
 
     @Override

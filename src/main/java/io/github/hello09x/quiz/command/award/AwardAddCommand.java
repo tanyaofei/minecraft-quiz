@@ -16,29 +16,31 @@ import java.util.List;
 
 public class AwardAddCommand extends ExecutableCommand {
 
-    public final static AwardAddCommand instance = new AwardAddCommand();
+    public final static AwardAddCommand instance = new AwardAddCommand(
+            "新增奖励",
+            "/quizadmin award add <命令 [;...]>",
+            "quizadmin.*"
+
+    );
     private final AwardRepository awardRepository = AwardRepository.instance;
 
     private final static Component help = Helps.help(
-            "创建一项奖励",
+            "新增奖励",
             "使用 ; 作为多条命令的分隔符",
-            List.of(
-                    new Helps.Content("用法", "/quizadmin award add <命令[;...]>"),
-                    new Helps.Content("例子", "/quizadmin award add experience %p add %r[1-10]; give %p diamond %r[1-10]"),
-                    new Helps.Content("变量", List.of(
-                            "%p: 玩家",
-                            "%r[?-?]: 随机值"
-                    ))
-            )
+            new Helps.Content("用法", "/quizadmin award add <命令[;...]>"),
+            new Helps.Content("例子", "/quizadmin award add experience %p add %r[1-10]; give %p diamond %r[1-10]"),
+            new Helps.Content("变量", List.of(
+                    "%p: 玩家",
+                    "%r[?-?]: 随机值"
+            ))
     );
 
-    @Override
-    public boolean hasPermission(CommandSender sender) {
-        return sender.hasPermission("quizadmin.*");
+    public AwardAddCommand(@NotNull String description, @NotNull String usage, @Nullable String permission) {
+        super(description, usage, permission);
     }
 
     @Override
-    public @NotNull Component getHelp() {
+    public @NotNull Component getHelp(int page) {
         return help;
     }
 

@@ -3,12 +3,8 @@ package io.github.hello09x.quiz.command.question;
 import io.github.hello09x.quiz.repository.QuestionRepository;
 import io.github.hello09x.quiz.repository.model.Question;
 import io.github.tanyaofei.plugin.toolkit.command.ExecutableCommand;
-import io.github.tanyaofei.plugin.toolkit.command.help.Helps;
-import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
-import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.Style;
-import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
@@ -17,27 +13,25 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Collections;
 import java.util.List;
 
+import static net.kyori.adventure.text.Component.text;
+import static net.kyori.adventure.text.Component.textOfChildren;
+import static net.kyori.adventure.text.format.NamedTextColor.GREEN;
+import static net.kyori.adventure.text.format.NamedTextColor.RED;
+import static net.kyori.adventure.text.format.TextDecoration.ITALIC;
+import static net.kyori.adventure.text.format.TextDecoration.UNDERLINED;
+
 public class QuestionAddCommand extends ExecutableCommand {
 
-    public static final QuestionAddCommand instance = new QuestionAddCommand();
-    private final QuestionRepository repository = QuestionRepository.instance;
-
-    @Override
-    public boolean hasPermission(CommandSender sender) {
-        return sender.hasPermission("quizadmin.*");
-    }
-
-    private final static Component help = Helps.help(
+    public static final QuestionAddCommand instance = new QuestionAddCommand(
             "新增题目",
-            null,
-            List.of(
-                    new Helps.Content("用法", "/quizadmin question add <题目>")
-            )
+            "/quizadmin question add <问题>",
+            "quizadmin.*"
     );
 
-    @Override
-    public @NotNull Component getHelp() {
-        return help;
+    private final QuestionRepository repository = QuestionRepository.instance;
+
+    public QuestionAddCommand(@NotNull String description, @NotNull String usage, @Nullable String permission) {
+        super(description, usage, permission);
     }
 
     @Override
@@ -55,9 +49,8 @@ public class QuestionAddCommand extends ExecutableCommand {
 
         var existed = repository.selectByTitle(title);
         if (existed != null) {
-            sender.sendMessage(Component.textOfChildren(
-                    Component.text("该问题已存在，他的 ID 是 ", NamedTextColor.RED),
-                    Component.text(existed.id(), NamedTextColor.GOLD)
+            sender.sendMessage(textOfChildren(
+                    text("该问题已存在"), text("<--[此处]").style(Style.style(RED, ITALIC)).clickEvent(ClickEvent.runCommand("/quizadmin question query " + existed.id()))
             ));
             return true;
         }
@@ -70,10 +63,10 @@ public class QuestionAddCommand extends ExecutableCommand {
 
         var id = repository.insert(question);
         var addAnswerCommand = String.format("/quizadmin answer add %d ", id);
-        sender.sendMessage(Component.textOfChildren(
-                Component.text("你成功创建了一道题目, 继续使用 ", NamedTextColor.GREEN),
-                Component.text(addAnswerCommand).style(Style.style(TextDecoration.UNDERLINED)).clickEvent(ClickEvent.suggestCommand(addAnswerCommand)),
-                Component.text("为它创建答案吧～", NamedTextColor.GREEN)
+        sender.sendMessage(textOfChildren(
+                text("你成功创建了一道题目, 继续使用 ", GREEN),
+                text(addAnswerCommand).style(Style.style(UNDERLINED)).clickEvent(ClickEvent.suggestCommand(addAnswerCommand)),
+                text("为它创建答案吧～", GREEN)
         ));
         return true;
     }

@@ -21,33 +21,33 @@ import java.util.stream.Collectors;
 
 public class AwardTestCommand extends ExecutableCommand {
 
-    public final static AwardTestCommand instance = new AwardTestCommand();
+    public final static AwardTestCommand instance = new AwardTestCommand(
+            "测试发放奖励",
+            "/quizadmin award test [ID|玩家]",
+            "quizadmin.*"
+    );
     private final AwardRepository awardRepository = AwardRepository.instance;
     private final AwardManager awardManager = AwardManager.instance;
 
     public final static Component help = Helps.help(
             "测试发放奖励",
-            null,
-            List.of(
-                    new Helps.Content("用法", "/quizadmin award test [ID|玩家]"),
-                    new Helps.Content("例子",
-                            List.of(
-                                    "/quizadmin award test          - 给自己随机发放一个奖励",
-                                    "/quizadmin award test 1        - 给自己发放 ID 为 1 的奖励",
-                                    "/quizadmin award test hello09x - 给玩家 hello09x 随机发放一个奖励"
+            new Helps.Content("用法", "/quizadmin award test [ID|玩家]"),
+            new Helps.Content("例子",
+                    List.of(
+                            "/quizadmin award test          - 给自己随机发放一个奖励",
+                            "/quizadmin award test 1        - 给自己发放 ID 为 1 的奖励",
+                            "/quizadmin award test hello09x - 给玩家 hello09x 随机发放一个奖励"
 
-                            )
                     )
             )
     );
 
-    @Override
-    public boolean hasPermission(CommandSender sender) {
-        return sender.hasPermission("quizadmin.*");
+    public AwardTestCommand(@NotNull String description, @NotNull String usage, @Nullable String permission) {
+        super(description, usage, permission);
     }
 
     @Override
-    public @NotNull Component getHelp() {
+    public @NotNull Component getHelp(int page) {
         return help;
     }
 

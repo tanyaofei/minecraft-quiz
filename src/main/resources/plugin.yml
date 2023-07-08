@@ -10,7 +10,7 @@ softdepend:
 commands:
   quizadmin:
     description: 有奖问答管理相关
-    usage: §/quizadmin ? for more info
+    usage: §2/quizadmin ? for more info
     aliases:
       - qzadmin
       - qzadm
@@ -19,3 +19,4 @@ permissions:
   quizadmin.*:
     description: 有奖问答管理员命令权限
     default: op
+

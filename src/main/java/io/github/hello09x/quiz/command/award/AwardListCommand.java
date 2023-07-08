@@ -15,30 +15,31 @@ import java.util.List;
 
 public class AwardListCommand extends ExecutableCommand {
 
-    public static final AwardListCommand instance = new AwardListCommand();
+    public static final AwardListCommand instance = new AwardListCommand(
+            "查看所有奖励",
+            "/quizadmin award list [页码] [数量]",
+            "quizadmin.*"
+    );
+
     private static final int DEFAULT_PAGE_SIZE = 10;
     private final AwardRepository repository = AwardRepository.instance;
 
     public static Component help = Helps.help(
             "查看所有奖励",
-            null,
-            List.of(
-                    new Helps.Content("用法", "/quizadmin award list [页码] [数量]"),
-                    new Helps.Content("例子", List.of(
-                            "/quizadmin award list      - 查看第 1 页",
-                            "/quizadmin award list 2    - 查看第 2 页",
-                            "/quizadmin award list 2 5  - 查看第 2 页, 每页 5 条"
-                    ))
-            )
+            new Helps.Content("用法", "/quizadmin award list [页码] [数量]"),
+            new Helps.Content("例子", List.of(
+                    "/quizadmin award list      - 查看第 1 页",
+                    "/quizadmin award list 2    - 查看第 2 页",
+                    "/quizadmin award list 2 5  - 查看第 2 页, 每页 5 条"
+            ))
     );
 
-    @Override
-    public boolean hasPermission(CommandSender sender) {
-        return sender.hasPermission("quizadmin.*");
+    public AwardListCommand(@NotNull String description, @NotNull String usage, @Nullable String permission) {
+        super(description, usage, permission);
     }
 
     @Override
-    public @NotNull Component getHelp() {
+    public @NotNull Component getHelp(int page) {
         return help;
     }
 

@@ -2,7 +2,6 @@ package io.github.hello09x.quiz.command.question;
 
 import io.github.hello09x.quiz.repository.QuestionRepository;
 import io.github.tanyaofei.plugin.toolkit.command.ExecutableCommand;
-import io.github.tanyaofei.plugin.toolkit.command.help.Helps;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.Command;
@@ -14,25 +13,16 @@ import java.util.List;
 
 public class QuestionDeleteCommand extends ExecutableCommand {
 
-    public final static QuestionDeleteCommand instance = new QuestionDeleteCommand();
-    private final QuestionRepository repository = QuestionRepository.instance;
-
-    @Override
-    public boolean hasPermission(CommandSender sender) {
-        return sender.hasPermission("quizadmin.*");
-    }
-
-    private final static Component help = Helps.help(
+    public final static QuestionDeleteCommand instance = new QuestionDeleteCommand(
             "删除题目",
-            null,
-            List.of(
-                    new Helps.Content("用法", "/quizadmin delete <ID>")
-            )
+            "/quizadmin question delete <ID>",
+            "quizadmin.*"
     );
 
-    @Override
-    public @NotNull Component getHelp() {
-        return help;
+    private final QuestionRepository repository = QuestionRepository.instance;
+
+    public QuestionDeleteCommand(@NotNull String description, @NotNull String usage, @Nullable String permission) {
+        super(description, usage, permission);
     }
 
     @Override

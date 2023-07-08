@@ -13,12 +13,14 @@ import java.util.List;
 
 public class ReloadCommand extends ExecutableCommand {
 
-    public final static ReloadCommand instance = new ReloadCommand();
+    public final static ReloadCommand instance = new ReloadCommand(
+            "重载配置文件",
+            "/quizadmin reload",
+            "quizadmin.*"
+    );
 
-
-    @Override
-    public @NotNull Component getHelp() {
-        return Component.text("重载插件", NamedTextColor.WHITE);
+    public ReloadCommand(@NotNull String description, @NotNull String usage, @Nullable String permission) {
+        super(description, usage, permission);
     }
 
     @Override
