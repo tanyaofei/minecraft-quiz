@@ -5,6 +5,8 @@ import com.google.gson.reflect.TypeToken;
 import io.github.hello09x.quiz.Quiz;
 import io.github.hello09x.quiz.repository.model.Question;
 import io.github.tanyaofei.plugin.toolkit.database.AbstractRepository;
+import io.github.tanyaofei.plugin.toolkit.database.Page;
+import org.apache.commons.lang3.StringUtils;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -14,6 +16,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.*;
+import java.util.logging.Logger;
 
 public class QuestionRepository extends AbstractRepository<Question> {
 
@@ -24,11 +27,14 @@ public class QuestionRepository extends AbstractRepository<Question> {
     private final static TypeToken<List<String>> STRING_LIST_TYPE_TOKEN = new TypeToken<>() {
     };
 
-    private LinkedList<Integer> cachedIds = new LinkedList<>();
+    private final static Logger log = Quiz.getInstance().getLogger();
+
+    private final LinkedList<Integer> queue = new LinkedList<>();
 
 
     public QuestionRepository(Plugin plugin) {
         super(plugin);
+        refillQueue();
     }
 
     public Integer insert(@NotNull Question question) {
@@ -36,7 +42,11 @@ public class QuestionRepository extends AbstractRepository<Question> {
             stm.setObject(1, question.title());
             stm.setObject(2, gson.toJson(question.answers()));
             stm.executeUpdate();
-            return stm.getGeneratedKeys().getInt(1);
+            var id = stm.getGeneratedKeys().getInt(1);
+            synchronized (this.queue) {
+                this.queue.add(id);
+            }
+            return id;
         } catch (SQLException e) {
             throw new IllegalStateException(e);
         }
@@ -50,6 +60,77 @@ public class QuestionRepository extends AbstractRepository<Question> {
             return mapOne(stm.executeQuery());
         } catch (SQLException e) {
             throw new IllegalStateException(e);
+        }
+    }
+
+    public @NotNull Page<Question> selectQueuePage(int page, int size) {
+        if (size < 1) {
+            size = 10;
+        }
+
+        List<Integer> ids;
+        int total;
+        int pages;
+        synchronized (this.queue) {
+            total = this.queue.size();
+            if (total == 0) {
+                return Page.emptyPage();
+            }
+
+            var from = Math.min((page - 1) * size, total - 1);
+            var to = Math.min(from + size, total);
+            pages = (int) Math.ceil((double) total / size);
+            page = Math.min(page, pages);
+            ids = this.queue.subList(from, to);
+        }
+
+        var data = selectByIds(ids);
+
+        data.sort((a, b) -> {
+            var i1 = ids.indexOf(a.id());
+            var i2 = ids.indexOf(b.id());
+
+            if (i1 != -1) {
+                i1 = ids.size() - i1;
+            }
+            if (i2 != -1) {
+                i2 = ids.size() - i2;
+            }
+            return i2 - i1;
+
+        });
+
+        return new Page<>(
+                data,
+                total,
+                pages,
+                page,
+                size
+        );
+    }
+
+    public @NotNull List<Question> selectByIds(@NotNull List<Integer> ids) {
+        if (ids.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        var p = new String[ids.size()];
+        Arrays.fill(p, "?");
+
+        var sql = String.format("""
+                SELECT *
+                 FROM question
+                 WHERE id in ( %s )
+                """, StringUtils.join(p, ","));
+
+        try (var stm = getConnection().prepareStatement(sql)) {
+            var itr = ids.listIterator();
+            while (itr.hasNext()) {
+                stm.setObject(itr.nextIndex() + 1, itr.next());
+            }
+            return mapMany(stm.executeQuery());
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -76,11 +157,7 @@ public class QuestionRepository extends AbstractRepository<Question> {
 
         var answers = question.answers();
         answers.remove((int) i);
-        var success = updateAnswersById(id, answers);
-        if (success > 0) {
-            cachedIds.clear();
-        }
-        return success;
+        return updateAnswersById(id, answers);
     }
 
     public int updateAnswersById(@NotNull Integer id, @NotNull List<String> answers) {
@@ -106,14 +183,32 @@ public class QuestionRepository extends AbstractRepository<Question> {
     }
 
     public int insertOrUpdateByTitle(@NotNull Question question) {
-        var sql = "INSERT OR REPLACE INTO question (id, title, answers) VALUES ((SELECT id FROM question WHERE title = ?), ?, ?)";
+        var sql = """
+                INSERT OR REPLACE INTO question (
+                    id,
+                    title,
+                    answers
+                ) VALUES (
+                    (SELECT id FROM question WHERE title = ?),
+                     ?,
+                     ?
+                )
+                """;
         try (var stm = getConnection().prepareStatement(sql)) {
             stm.setObject(1, question.title());
             stm.setObject(2, question.title());
             stm.setObject(3, gson.toJson(question.answers()));
             var success = stm.executeUpdate();
             if (success > 0) {
-                cachedIds.clear();
+                var id = Optional
+                        .ofNullable(selectByTitle(question.title()))
+                        .map(Question::id)
+                        .orElse(null);
+                synchronized (queue) {
+                    if (!queue.contains(id)) {
+                        queue.add(id);
+                    }
+                }
             }
             return success;
         } catch (SQLException e) {
@@ -138,20 +233,17 @@ public class QuestionRepository extends AbstractRepository<Question> {
 
     @Override
     public @Nullable Question selectRandomly() {
-        if (this.cachedIds.isEmpty()) {
-            synchronized (this) {
-                this.cachedIds = selectIds();
-                Collections.shuffle(cachedIds);
-            }
+        if (refillQueue()) {
+            log.info("已刷新题目清单");
         }
 
-        if (this.cachedIds.isEmpty()) {
+        if (this.queue.isEmpty()) {
             return null;
         }
 
-        var question = selectById(this.cachedIds.poll());
+        var question = selectById(this.queue.poll());
         if (question == null) {
-            this.cachedIds.clear();
+            this.queue.clear();
         }
         return question;
     }
@@ -173,7 +265,7 @@ public class QuestionRepository extends AbstractRepository<Question> {
     public int deleteById(@NotNull Serializable id) {
         var success = super.deleteById(id);
         if (success > 0) {
-            this.cachedIds.clear();
+            this.queue.removeIf(i -> i.equals(id));
         }
         return success;
     }
@@ -189,6 +281,26 @@ public class QuestionRepository extends AbstractRepository<Question> {
                     gson.fromJson(rs.getString("answers"), STRING_LIST_TYPE_TOKEN));
         } catch (SQLException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    private boolean refillQueue() {
+        if (this.queue.isEmpty()) {
+            synchronized (this.queue) {
+                if (this.queue.isEmpty()) {
+                    queue.addAll(selectIds());
+                    Collections.shuffle(queue);
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public void regenerateQueue() {
+        synchronized (this.queue) {
+            this.queue.clear();
+            refillQueue();
         }
     }
 

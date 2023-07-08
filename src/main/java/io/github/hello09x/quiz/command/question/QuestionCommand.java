@@ -14,6 +14,8 @@ public class QuestionCommand extends ParentCommand {
         instance.register("add", QuestionAddCommand.instance);
         instance.register("delete", QuestionDeleteCommand.instance);
         instance.register("query", QuestionQueryCommand.instance);
+        instance.register("queue", QuestionQueueCommand.instance);
+        instance.register("requeue", QuestionRequeueCommand.instance);
         instance.register("search", QuestionSearchCommand.instance);
         instance.register("import", QuestionImportCommand.instance);
     }
