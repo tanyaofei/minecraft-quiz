@@ -2,6 +2,7 @@ package io.github.hello09x.quiz.command.question;
 
 import io.github.hello09x.quiz.repository.QuestionRepository;
 import io.github.tanyaofei.plugin.toolkit.command.ExecutableCommand;
+import io.github.tanyaofei.plugin.toolkit.command.help.Helps;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.Command;
@@ -21,13 +22,17 @@ public class QuestionDeleteCommand extends ExecutableCommand {
         return sender.hasPermission("quizadmin.*");
     }
 
+    private final static Component help = Helps.help(
+            "删除题目",
+            null,
+            List.of(
+                    new Helps.Content("用法", "/quizadmin delete <ID>")
+            )
+    );
+
     @Override
     public @NotNull Component getHelp() {
-        return Component.textOfChildren(
-                Component.text("删除一道题目\n", NamedTextColor.YELLOW),
-                Component.text("用法: ", NamedTextColor.GOLD), Component.text("/quizadmin question delete <ID>\n"),
-                Component.text("例子: ", NamedTextColor.GOLD), Component.text("/quizadmin question delete 1")
-        );
+        return help;
     }
 
     @Override

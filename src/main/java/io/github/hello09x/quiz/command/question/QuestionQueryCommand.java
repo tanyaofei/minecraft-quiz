@@ -3,6 +3,7 @@ package io.github.hello09x.quiz.command.question;
 import io.github.hello09x.quiz.repository.QuestionRepository;
 import io.github.hello09x.quiz.repository.model.Question;
 import io.github.tanyaofei.plugin.toolkit.command.ExecutableCommand;
+import io.github.tanyaofei.plugin.toolkit.command.help.Helps;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -21,13 +22,17 @@ public class QuestionQueryCommand extends ExecutableCommand {
     public final static QuestionQueryCommand instance = new QuestionQueryCommand();
     private final QuestionRepository repository = QuestionRepository.instance;
 
+    private final static Component help = Helps.help(
+            "查看问题",
+            null,
+            List.of(
+                    new Helps.Content("用法", "/quizadmin question query 1")
+            )
+    );
+
     @Override
     public @NotNull Component getHelp() {
-        return Component.textOfChildren(
-                Component.text("查看问题\n", NamedTextColor.YELLOW),
-                Component.text("用法: ", NamedTextColor.GOLD), Component.text("/quizadmin question query <ID>\n"),
-                Component.text("例子: ", NamedTextColor.GOLD), Component.text("/quizadmin question query 1 \n")
-        );
+        return help;
     }
 
     @Override

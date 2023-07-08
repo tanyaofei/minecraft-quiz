@@ -5,6 +5,7 @@ import io.github.hello09x.quiz.Quiz;
 import io.github.hello09x.quiz.repository.QuestionRepository;
 import io.github.hello09x.quiz.repository.model.Question;
 import io.github.tanyaofei.plugin.toolkit.command.ExecutableCommand;
+import io.github.tanyaofei.plugin.toolkit.command.help.Helps;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -39,6 +40,19 @@ public class QuestionImportCommand extends ExecutableCommand {
         instance = new QuestionImportCommand();
     }
 
+    private final static Component help = Helps.help(
+            "导入题目",
+            "仅可以导入插件数据目录下的 csv 文件",
+            List.of(
+                    new Helps.Content("用法", "/quizadmin question import <文件名>"),
+                    new Helps.Content("例子", "/quizadmin question import questions.csv"),
+                    new Helps.Content("注意", List.of(
+                            "1. 文件必须为 csv 格式并且存放于插件数据目录下",
+                            "2. 插件目录下有一个名为 \"import-template.csv\" 模版参考, 但注意不要直接修改它"
+                    ))
+            )
+    );
+
     private final QuestionRepository repository = QuestionRepository.instance;
 
     public QuestionImportCommand() {
@@ -67,14 +81,7 @@ public class QuestionImportCommand extends ExecutableCommand {
 
     @Override
     public @NotNull Component getHelp() {
-        return Component.textOfChildren(
-                Component.text("从插件目录下导入题库\n", NamedTextColor.YELLOW),
-                Component.text("用法: ", NamedTextColor.GOLD), Component.text("/quizadmin question import <CSV 文件名>\n"),
-                Component.text("例子: ", NamedTextColor.GOLD), Component.text("/quizadmin question import question.csv\n"),
-                Component.text("注意: \n", NamedTextColor.GOLD),
-                Component.text("    1. CSV 文件必须位于插件的数据目录\n"),
-                Component.text("    2. 模版文件位于插件目录下的 \"import-template.csv\", 但注意不要直接修改它")
-        );
+        return help;
     }
 
     @Override

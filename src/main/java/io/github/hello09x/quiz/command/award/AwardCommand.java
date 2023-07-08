@@ -1,13 +1,26 @@
 package io.github.hello09x.quiz.command.award;
 
 import io.github.tanyaofei.plugin.toolkit.command.ParentCommand;
+import io.github.tanyaofei.plugin.toolkit.command.help.Helps;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 public class AwardCommand extends ParentCommand {
 
     public static AwardCommand instance = new AwardCommand();
+
+    private final static Component help = Helps.help(
+            "奖励相关命令",
+            null,
+            List.of(
+                    new Helps.Content("list [页码] [数量]", "查看所有奖励"),
+                    new Helps.Content("add <命令 [;...]>", "添加题目"),
+                    new Helps.Content("delete <ID>", "删除奖励"),
+                    new Helps.Content("test <玩家|ID>", "测试方法奖励")
+            )
+    );
 
     static {
         instance.register("list", AwardListCommand.instance);
@@ -18,13 +31,7 @@ public class AwardCommand extends ParentCommand {
 
     @Override
     public @NotNull Component getHelp() {
-        return Component.textOfChildren(
-                Component.text("奖励相关命令", NamedTextColor.YELLOW),
-                Component.text("list", NamedTextColor.DARK_GREEN), Component.text(" - ", NamedTextColor.GRAY), Component.text("查看奖励\n"),
-                Component.text("add", NamedTextColor.DARK_GREEN), Component.text(" - ", NamedTextColor.GRAY), Component.text("添加奖励\n"),
-                Component.text("delete", NamedTextColor.DARK_GREEN), Component.text(" - ", NamedTextColor.GRAY), Component.text("删除奖励\n"),
-                Component.text("test", NamedTextColor.DARK_GREEN), Component.text(" - ", NamedTextColor.GRAY), Component.text("测试奖励")
-        );
+        return help;
     }
 
 }

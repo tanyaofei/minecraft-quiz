@@ -2,6 +2,7 @@ package io.github.hello09x.quiz.command.answer;
 
 import io.github.hello09x.quiz.repository.QuestionRepository;
 import io.github.tanyaofei.plugin.toolkit.command.ExecutableCommand;
+import io.github.tanyaofei.plugin.toolkit.command.help.Helps;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.Command;
@@ -16,15 +17,17 @@ public class AnswerDeleteCommand extends ExecutableCommand {
     public final static AnswerDeleteCommand instance = new AnswerDeleteCommand();
     private final QuestionRepository repository = QuestionRepository.instance;
 
+    public final static Component help = Helps.help(
+            "删除答案",
+            null,
+            List.of(
+                    new Helps.Content("用法", "/quizadmin answer delete <ID> [答案序号]")
+            )
+    );
+
     @Override
     public @NotNull Component getHelp() {
-        return Component.textOfChildren(
-                Component.text("删除答案\n", NamedTextColor.YELLOW),
-                Component.text("用法: ", NamedTextColor.GOLD), Component.text("/quizadmin answer delete <ID> [答案序号]\n"),
-                Component.text("例子: \n", NamedTextColor.GOLD),
-                Component.text("    /quizadmin answer delete 1", NamedTextColor.DARK_GREEN), Component.text(" - ", NamedTextColor.GRAY), Component.text("删除所有答案\n"),
-                Component.text("    /quizadmin question delete 1 1", NamedTextColor.DARK_GREEN), Component.text(" - ", NamedTextColor.GRAY), Component.text("删除第 1 个答案")
-        );
+        return help;
     }
 
     @Override

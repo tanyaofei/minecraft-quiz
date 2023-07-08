@@ -3,6 +3,7 @@ package io.github.hello09x.quiz.command.award;
 import io.github.hello09x.quiz.manager.AwardManager;
 import io.github.hello09x.quiz.repository.AwardRepository;
 import io.github.tanyaofei.plugin.toolkit.command.ExecutableCommand;
+import io.github.tanyaofei.plugin.toolkit.command.help.Helps;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -24,6 +25,22 @@ public class AwardTestCommand extends ExecutableCommand {
     private final AwardRepository awardRepository = AwardRepository.instance;
     private final AwardManager awardManager = AwardManager.instance;
 
+    public final static Component help = Helps.help(
+            "测试发放奖励",
+            null,
+            List.of(
+                    new Helps.Content("用法", "/quizadmin award test [ID|玩家]"),
+                    new Helps.Content("例子",
+                            List.of(
+                                    "/quizadmin award test          - 给自己随机发放一个奖励",
+                                    "/quizadmin award test 1        - 给自己发放 ID 为 1 的奖励",
+                                    "/quizadmin award test hello09x - 给玩家 hello09x 随机发放一个奖励"
+
+                            )
+                    )
+            )
+    );
+
     @Override
     public boolean hasPermission(CommandSender sender) {
         return sender.hasPermission("quizadmin.*");
@@ -31,15 +48,7 @@ public class AwardTestCommand extends ExecutableCommand {
 
     @Override
     public @NotNull Component getHelp() {
-        return Component.textOfChildren(
-                Component.text("测试发放奖励\n", NamedTextColor.YELLOW),
-                Component.text("用法: ", NamedTextColor.GOLD), Component.text("/quizadmin award test [ID|玩家]\n"),
-                Component.text("例子:\n", NamedTextColor.GOLD),
-                Component.text("    /quizadmin award test", NamedTextColor.DARK_GREEN), Component.text(" - ", NamedTextColor.GRAY), Component.text("给自己随机发放方法一个奖励\n"),
-                Component.text("    /quizadmin award test 1", NamedTextColor.DARK_GREEN), Component.text(" - ", NamedTextColor.GRAY), Component.text("给自己发放 ID 为 1 的奖励\n"),
-                Component.text("    /quizadmin award test hello09x", NamedTextColor.DARK_GREEN), Component.text(" - ", NamedTextColor.GRAY), Component.text("给玩家 hello09x 随机发放一个奖励")
-        );
-
+        return help;
     }
 
     @Override

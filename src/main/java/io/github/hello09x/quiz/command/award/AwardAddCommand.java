@@ -3,6 +3,7 @@ package io.github.hello09x.quiz.command.award;
 import io.github.hello09x.quiz.repository.AwardRepository;
 import io.github.hello09x.quiz.repository.model.Award;
 import io.github.tanyaofei.plugin.toolkit.command.ExecutableCommand;
+import io.github.tanyaofei.plugin.toolkit.command.help.Helps;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.Command;
@@ -18,6 +19,19 @@ public class AwardAddCommand extends ExecutableCommand {
     public final static AwardAddCommand instance = new AwardAddCommand();
     private final AwardRepository awardRepository = AwardRepository.instance;
 
+    private final static Component help = Helps.help(
+            "创建一项奖励",
+            "使用 ; 作为多条命令的分隔符",
+            List.of(
+                    new Helps.Content("用法", "/quizadmin award add <命令[;...]>"),
+                    new Helps.Content("例子", "/quizadmin award add experience %p add %r[1-10]; give %p diamond %r[1-10]"),
+                    new Helps.Content("变量", List.of(
+                            "%p: 玩家",
+                            "%r[?-?]: 随机值"
+                    ))
+            )
+    );
+
     @Override
     public boolean hasPermission(CommandSender sender) {
         return sender.hasPermission("quizadmin.*");
@@ -25,15 +39,7 @@ public class AwardAddCommand extends ExecutableCommand {
 
     @Override
     public @NotNull Component getHelp() {
-        return Component.textOfChildren(
-                Component.text("创建一项奖励\n", NamedTextColor.YELLOW),
-                Component.text("用法: ", NamedTextColor.GOLD), Component.text("/quizadmin award add <奖励命令>\n"),
-                Component.text("例子: ", NamedTextColor.GOLD), Component.text("/quizadmin award add experience %p add %r[1-10]; give %p diamond %r[1-10]\n"),
-                Component.text("注意: ", NamedTextColor.GOLD), Component.text("多条命令使用"), Component.text(" ; ", NamedTextColor.DARK_GRAY), Component.text("分割\n"),
-                Component.text("变量: \n", NamedTextColor.GOLD),
-                Component.text("    %p: ", NamedTextColor.DARK_GREEN), Component.text("玩家\n"),
-                Component.text("    %r[?-?]: ", NamedTextColor.DARK_GREEN), Component.text("随机数")
-        );
+        return help;
     }
 
     @Override

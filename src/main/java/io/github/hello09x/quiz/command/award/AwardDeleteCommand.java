@@ -2,6 +2,7 @@ package io.github.hello09x.quiz.command.award;
 
 import io.github.hello09x.quiz.repository.AwardRepository;
 import io.github.tanyaofei.plugin.toolkit.command.ExecutableCommand;
+import io.github.tanyaofei.plugin.toolkit.command.help.Helps;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.Command;
@@ -17,6 +18,14 @@ public class AwardDeleteCommand extends ExecutableCommand {
     public final static AwardDeleteCommand instance = new AwardDeleteCommand();
     private final AwardRepository awardRepository = AwardRepository.instance;
 
+    private final static Component help = Helps.help(
+            "删除奖励",
+            null,
+            List.of(
+                    new Helps.Content("用法", "/quizadmin award delete <ID>")
+            )
+    );
+
     @Override
     public boolean hasPermission(CommandSender sender) {
         return sender.hasPermission("quizadmin.*");
@@ -24,12 +33,7 @@ public class AwardDeleteCommand extends ExecutableCommand {
 
     @Override
     public @NotNull Component getHelp() {
-        return Component.textOfChildren(
-                Component.text("删除一项奖励", NamedTextColor.YELLOW), Component.newline(),
-                Component.text("用法: ", NamedTextColor.GOLD), Component.text("/quizadmin delete <ID>\n"),
-                Component.text("例子: \n", NamedTextColor.GOLD),
-                Component.text("    /quizadmin delete 1", NamedTextColor.DARK_GREEN), Component.text(" - ", NamedTextColor.GRAY), Component.text("删除 ID 为 1 的奖励")
-        );
+        return help;
     }
 
     @Override

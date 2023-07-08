@@ -2,6 +2,7 @@ package io.github.hello09x.quiz.command.answer;
 
 import io.github.hello09x.quiz.repository.QuestionRepository;
 import io.github.tanyaofei.plugin.toolkit.command.ExecutableCommand;
+import io.github.tanyaofei.plugin.toolkit.command.help.Helps;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.Command;
@@ -10,8 +11,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
+
+import static net.kyori.adventure.text.Component.text;
 
 public class AnswerAddCommand extends ExecutableCommand {
 
@@ -19,13 +21,17 @@ public class AnswerAddCommand extends ExecutableCommand {
 
     public final static AnswerAddCommand instance = new AnswerAddCommand();
 
+    public final static Component help = Helps.help(
+            "添加答案",
+            "你可以多次执行来添加多个答案",
+            List.of(
+                    new Helps.Content("用法", "/quizadmin answer add <id> <答案>")
+            )
+    );
+
     @Override
     public @NotNull Component getHelp() {
-        return Component.textOfChildren(
-                Component.text("功能: 添加答案; 你可以通过多次执行来为一道题添加多个答案\n", NamedTextColor.YELLOW),
-                Component.text("用法: ", NamedTextColor.GOLD), Component.text("/quizadmin answer add <题目ID> <答案>\n"),
-                Component.text("例子: ", NamedTextColor.GOLD), Component.text("/quizadmin answer add 1 这是答案\n")
-        );
+        return help;
     }
 
     @Override
@@ -43,23 +49,28 @@ public class AnswerAddCommand extends ExecutableCommand {
         try {
             id = Integer.parseInt(args[0]);
         } catch (NumberFormatException e) {
-            sender.sendMessage(Component.text("错误的 ID", NamedTextColor.RED));
+            sender.sendMessage(text("错误的 ID", NamedTextColor.RED));
             return false;
         }
 
         var answer = String.join(" ", Arrays.copyOfRange(args, 1, args.length));
         var success = repository.addAnswerById(id, answer);
         if (success == 0) {
-            sender.sendMessage(Component.text(String.format("ID 为 %d 的问题不存在", id), NamedTextColor.RED));
+            sender.sendMessage(text(String.format("ID 为 %d 的问题不存在", id), NamedTextColor.RED));
             return true;
         }
 
-        sender.sendMessage(Component.text(String.format("你成功为 ID 为 %d 的问题添加了一个新的答案", id), NamedTextColor.GREEN));
+        sender.sendMessage(text(String.format("你成功为 ID 为 %d 的问题添加了一个新的答案", id), NamedTextColor.GREEN));
         return true;
     }
 
     @Override
-    public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        return Collections.emptyList();
+    public @Nullable List<String> onTabComplete(
+            @NotNull CommandSender sender,
+            @NotNull Command command,
+            @NotNull String label,
+            @NotNull String[] args
+    ) {
+        return null;
     }
 }

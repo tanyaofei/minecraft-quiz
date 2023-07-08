@@ -2,6 +2,7 @@ package io.github.hello09x.quiz.command.question;
 
 import io.github.hello09x.quiz.repository.QuestionRepository;
 import io.github.tanyaofei.plugin.toolkit.command.ExecutableCommand;
+import io.github.tanyaofei.plugin.toolkit.command.help.Helps;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -22,6 +23,19 @@ public class QuestionListCommand extends ExecutableCommand {
 
     private final static int DEFAULT_PAGE_SIZE = 10;
 
+        public static Component help = Helps.help(
+            "查看所有问题",
+            null,
+            List.of(
+                    new Helps.Content("用法", "/quizadmin question list [页码] [数量]"),
+                    new Helps.Content("例子", List.of(
+                            "/quizadmin question list      - 查看第 1 页",
+                            "/quizadmin question list 2    - 查看第 2 页",
+                            "/quizadmin question list 2 5  - 查看第 2 页, 每页 5 条"
+                    ))
+            )
+    );
+
     @Override
     public boolean hasPermission(CommandSender sender) {
         return sender.hasPermission("quizadmin.*");
@@ -29,13 +43,7 @@ public class QuestionListCommand extends ExecutableCommand {
 
     @Override
     public @NotNull Component getHelp() {
-        return Component.textOfChildren(
-                Component.text("查看所有问题\n", NamedTextColor.YELLOW),
-                Component.text("用法: ", NamedTextColor.GOLD), Component.text("/quizadmin question list [页码] [条数]\n"),
-                Component.text("例子: \n", NamedTextColor.GOLD),
-                Component.text("    /quizadmin question list 2", NamedTextColor.DARK_GREEN), Component.text(" - ", NamedTextColor.GRAY), Component.text("查看第 2 页\n"),
-                Component.text("    /quizadmin question list 2 10", NamedTextColor.DARK_GREEN), Component.text(" - ", NamedTextColor.GRAY), Component.text("查看第 2 页, 每页 10 条\n")
-        );
+        return help;
     }
 
     @Override

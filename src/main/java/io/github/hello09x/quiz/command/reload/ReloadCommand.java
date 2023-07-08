@@ -18,7 +18,7 @@ public class ReloadCommand extends ExecutableCommand {
 
     @Override
     public @NotNull Component getHelp() {
-        return Component.text("重载插件", NamedTextColor.YELLOW);
+        return Component.text("重载插件", NamedTextColor.WHITE);
     }
 
     @Override

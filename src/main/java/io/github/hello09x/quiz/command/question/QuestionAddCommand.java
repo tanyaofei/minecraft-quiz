@@ -3,6 +3,7 @@ package io.github.hello09x.quiz.command.question;
 import io.github.hello09x.quiz.repository.QuestionRepository;
 import io.github.hello09x.quiz.repository.model.Question;
 import io.github.tanyaofei.plugin.toolkit.command.ExecutableCommand;
+import io.github.tanyaofei.plugin.toolkit.command.help.Helps;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -26,13 +27,17 @@ public class QuestionAddCommand extends ExecutableCommand {
         return sender.hasPermission("quizadmin.*");
     }
 
+    private final static Component help = Helps.help(
+            "新增题目",
+            null,
+            List.of(
+                    new Helps.Content("用法", "/quizadmin question add <题目>")
+            )
+    );
+
     @Override
     public @NotNull Component getHelp() {
-        return Component.textOfChildren(
-                Component.text("创建一道题目\n", NamedTextColor.YELLOW),
-                Component.text("用法: ", NamedTextColor.GOLD), Component.text("/quizadmin question add <问题>\n"),
-                Component.text("例子: ", NamedTextColor.GOLD), Component.text("/quizadmin question add 这个世界上谁是最帅的美男子？")
-        );
+        return help;
     }
 
     @Override

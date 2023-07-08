@@ -1,13 +1,24 @@
 package io.github.hello09x.quiz.command.answer;
 
 import io.github.tanyaofei.plugin.toolkit.command.ParentCommand;
+import io.github.tanyaofei.plugin.toolkit.command.help.Helps;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 public class AnswerCommand extends ParentCommand {
 
     public final static AnswerCommand instance = new AnswerCommand();
+
+    private final static Component help = Helps.help(
+            "答案相关命令",
+            null,
+            List.of(
+                    new Helps.Content("add <id> [答案]", "添加答案"),
+                    new Helps.Content("delete <id> [序号]", "删除答案")
+            )
+    );
 
     static {
         instance.register("add", AnswerAddCommand.instance);
@@ -16,11 +27,7 @@ public class AnswerCommand extends ParentCommand {
 
     @Override
     public @NotNull Component getHelp() {
-        return Component.textOfChildren(
-                Component.text("答案相关命令", NamedTextColor.YELLOW),
-                Component.text("add", NamedTextColor.DARK_GREEN), Component.text(" - ", NamedTextColor.GRAY), Component.text("添加答案\n"),
-                Component.text("delete", NamedTextColor.DARK_GREEN), Component.text(" - ", NamedTextColor.GRAY), Component.text("删除答案")
-        );
+        return help;
     }
 
 }

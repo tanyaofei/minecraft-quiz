@@ -50,7 +50,6 @@ public final class Quiz extends JavaPlugin {
             supportPlaceholderAPI();
         }
 
-
     }
 
 
