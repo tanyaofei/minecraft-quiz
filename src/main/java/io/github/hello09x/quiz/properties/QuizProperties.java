@@ -2,12 +2,12 @@ package io.github.hello09x.quiz.properties;
 
 
 import io.github.hello09x.quiz.Quiz;
+import io.github.tanyaofei.plugin.toolkit.io.IOUtil;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.codehaus.plexus.util.IOUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.FileWriter;

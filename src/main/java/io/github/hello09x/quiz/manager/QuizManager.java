@@ -37,6 +37,7 @@ public class QuizManager {
     private final QuestionRepository questionRepository = QuestionRepository.instance;
     private final AwardRepository awardRepository = AwardRepository.instance;
     private final StatisticRepository statisticRepository = StatisticRepository.instance;
+    private final AwardManager awardManager = AwardManager.instance;
     private final ScheduledExecutorService timer;
     private volatile Asking current;
 
@@ -179,12 +180,17 @@ public class QuizManager {
                         Component.text(answer).style(Style.style(NamedTextColor.GOLD, TextDecoration.ITALIC))
                 ));
 
-        server.playSound(Sound.sound(
-                org.bukkit.Sound.ENTITY_FIREWORK_ROCKET_LARGE_BLAST.key(),
-                Sound.Source.AMBIENT,
-                1.0F,
-                1.0F)
-        );
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                server.playSound(Sound.sound(
+                        org.bukkit.Sound.ENTITY_FIREWORK_ROCKET_LARGE_BLAST.key(),
+                        Sound.Source.MASTER,
+                        1.0F,
+                        1.0F)
+                );
+            }
+        }.runTask(quiz);
 
         player.showTitle(Title.title(Component.text("Bingo, 蒙对了！", NamedTextColor.YELLOW), Component.empty()));
 
@@ -208,28 +214,12 @@ public class QuizManager {
             return true;
         }
 
-        var console = server.getConsoleSender();
-        for (var cl : award.getCommandLines(player)) {
-            try {
-                new BukkitRunnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            server.dispatchCommand(console, cl);
-                        } catch (Exception e) {
-                            player.sendMessage(Component.text("[quiz] 发放奖励时发生错误, 先欠着下次一定", NamedTextColor.RED));
-                            log.warning(Throwables.getStackTraceAsString(e));
-                        }
-
-                        player.sendMessage(Component.text("[quiz] 奖励已偷偷给你了, 不要告诉别人哦～").style(Style.style(NamedTextColor.GRAY, TextDecoration.ITALIC)));
-                    }
-                }.runTask(quiz);
-            } catch (Exception e) {
-                player.sendMessage(Component.text("[quiz] 发放奖励时发生错误，先欠着下次一定", NamedTextColor.RED));
-                log.warning(Throwables.getStackTraceAsString(e));
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                awardManager.issue(award, player);
             }
-        }
-
+        }.runTask(quiz);
         return true;
     }
 
